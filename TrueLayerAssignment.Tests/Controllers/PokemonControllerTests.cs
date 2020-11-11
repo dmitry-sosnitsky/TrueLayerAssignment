@@ -108,5 +108,24 @@ namespace TrueLayerAssignment.Tests.Controllers
             var validationResult = notFountResult.Value.Should().BeOfType<ValidationResult>().Subject;
             validationResult.ErrorMessage.Should().Be("Pokemon with name 'xyz' not found");
         }
+
+        [Test]
+        public async Task When_provider_call_throws_DescriptionForVersionNotFoundException_Should_return_not_found()
+        {
+            // arrange
+            var pokemonDescriptionProviderMock = new Mock<IPokemonDescriptionProvider>();
+            pokemonDescriptionProviderMock
+                .Setup(x => x.GetShakesperianDescription(It.IsAny<string>(), It.IsAny<GameVersion>()))
+                .ThrowsAsync(new DescriptionForVersionNotFoundException(GameVersion.Red));
+            var controller = new PokemonController(pokemonDescriptionProviderMock.Object);
+
+            // act
+            var result = await controller.GetShakespearianDescription(new GetShakespearianDescriptionRequest { Name = "xyz" });
+
+            // assert
+            var notFountResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+            var validationResult = notFountResult.Value.Should().BeOfType<ValidationResult>().Subject;
+            validationResult.ErrorMessage.Should().Be("Description for game version 'Red' not found");
+        }
     }
 }

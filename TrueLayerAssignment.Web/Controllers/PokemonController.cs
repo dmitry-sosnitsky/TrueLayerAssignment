@@ -40,7 +40,7 @@ namespace TrueLayerAssignment.Web.Controllers
                 var response = new GetShakespearianDescriptionResponse(request.Name, description);
                 return this.Ok(response);
             }
-            catch (Exception e) when (e is PokemonNotFoundException)
+            catch (Exception e) when (e is PokemonNotFoundException || e is DescriptionForVersionNotFoundException)
             {
                 return this.NotFound(ValidationResult.Failed(e.Message));
             }

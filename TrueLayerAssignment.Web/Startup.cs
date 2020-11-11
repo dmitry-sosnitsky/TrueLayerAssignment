@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RestSharp;
 using TrueLayerAssignment.Core;
+using TrueLayerAssignment.Core.PokemonSummary;
+using TrueLayerAssignment.Core.PokemonSummary.PokeApi;
 
 namespace TrueLayerAssignment.Web
 {
@@ -20,6 +23,8 @@ namespace TrueLayerAssignment.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
+            services.AddSingleton<IPokemonSpeciesSummaryProvider>(new PokeApiClient("https://pokeapi.co/api/v2/", new RestClient()));
             services.AddSingleton<IPokemonDescriptionProvider, PokemonDescriptionProvider>();
         }
 
