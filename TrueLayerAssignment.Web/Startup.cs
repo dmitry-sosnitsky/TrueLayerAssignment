@@ -7,6 +7,8 @@ using RestSharp;
 using TrueLayerAssignment.Core;
 using TrueLayerAssignment.Core.PokemonSummary;
 using TrueLayerAssignment.Core.PokemonSummary.PokeApi;
+using TrueLayerAssignment.Core.ShakespeareTranslator;
+using TrueLayerAssignment.Core.ShakespeareTranslator.FunTranslations;
 
 namespace TrueLayerAssignment.Web
 {
@@ -23,8 +25,9 @@ namespace TrueLayerAssignment.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
+
             services.AddSingleton<IPokemonSpeciesSummaryProvider>(new PokeApiClient("https://pokeapi.co/api/v2/", new RestClient()));
+            services.AddSingleton<IShakespeareTranslator>(new FunTranslationsApiClient("https://api.funtranslations.com/translate/", new RestClient()));
             services.AddSingleton<IPokemonDescriptionProvider, PokemonDescriptionProvider>();
         }
 

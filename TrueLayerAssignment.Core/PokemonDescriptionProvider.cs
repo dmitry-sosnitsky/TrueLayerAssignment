@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TrueLayerAssignment.Core.PokemonSummary;
+using TrueLayerAssignment.Core.ShakespeareTranslator;
 
 namespace TrueLayerAssignment.Core
 {
@@ -8,14 +9,17 @@ namespace TrueLayerAssignment.Core
     public class PokemonDescriptionProvider : IPokemonDescriptionProvider
     {
         private readonly IPokemonSpeciesSummaryProvider pokemonSpeciesSummaryProvider;
+        private readonly IShakespeareTranslator shakespeareTranslator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PokemonDescriptionProvider"/> class
         /// </summary>
         /// <param name="pokemonSpeciesSummaryProvider">Pokemon species summary provider</param>
-        public PokemonDescriptionProvider(IPokemonSpeciesSummaryProvider pokemonSpeciesSummaryProvider)
+        /// <param name="shakespeareTranslator">Shakespeare translator</param>
+        public PokemonDescriptionProvider(IPokemonSpeciesSummaryProvider pokemonSpeciesSummaryProvider, IShakespeareTranslator shakespeareTranslator)
         {
             this.pokemonSpeciesSummaryProvider = pokemonSpeciesSummaryProvider ?? throw new ArgumentNullException(nameof(pokemonSpeciesSummaryProvider));
+            this.shakespeareTranslator = shakespeareTranslator ?? throw new ArgumentNullException(nameof(shakespeareTranslator));
         }
 
         /// <inheritdoc/>
@@ -36,7 +40,9 @@ namespace TrueLayerAssignment.Core
                 throw new DescriptionForVersionNotFoundException(version);
             }
 
-            return plainDescription;
+            string shakesperianDescription = await this.shakespeareTranslator.GetTranslation(plainDescription);
+
+            return shakesperianDescription;
         }
     }
 }

@@ -6,6 +6,7 @@ using NUnit.Framework;
 using TrueLayerAssignment.Core;
 using TrueLayerAssignment.Core.PokemonSummary;
 using TrueLayerAssignment.Core.PokemonSummary.PokeApi.DataContracts;
+using TrueLayerAssignment.Core.ShakespeareTranslator;
 
 namespace TrueLayerAssignment.Tests.Core
 {
@@ -48,13 +49,15 @@ namespace TrueLayerAssignment.Tests.Core
             };
             var pokemonSpeciesSummaryProviderMock = new Mock<IPokemonSpeciesSummaryProvider>();
             pokemonSpeciesSummaryProviderMock.Setup(x => x.GetSpecies(It.IsAny<string>())).ReturnsAsync(new PokemonSpeciesSummary(pokemonSpecies));
-            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object);
+            var shakespeareTranslatorMock = new Mock<IShakespeareTranslator>();
+            shakespeareTranslatorMock.Setup(x => x.GetTranslation("Description 1")).ReturnsAsync("Shakespearian description 1");
+            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object, shakespeareTranslatorMock.Object);
 
             // act
             var result = await provider.GetShakesperianDescription("Pikachu", GameVersion.Any);
 
             // assert
-            result.Should().Be("Description 1");
+            result.Should().Be("Shakespearian description 1");
         }
 
         [Test]
@@ -94,13 +97,15 @@ namespace TrueLayerAssignment.Tests.Core
             };
             var pokemonSpeciesSummaryProviderMock = new Mock<IPokemonSpeciesSummaryProvider>();
             pokemonSpeciesSummaryProviderMock.Setup(x => x.GetSpecies(It.IsAny<string>())).ReturnsAsync(new PokemonSpeciesSummary(pokemonSpecies));
-            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object);
+            var shakespeareTranslatorMock = new Mock<IShakespeareTranslator>();
+            shakespeareTranslatorMock.Setup(x => x.GetTranslation("English description")).ReturnsAsync("Shakespearian description");
+            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object, shakespeareTranslatorMock.Object);
 
             // act
             var result = await provider.GetShakesperianDescription("Pikachu", GameVersion.Any);
 
             // assert
-            result.Should().Be("English description");
+            result.Should().Be("Shakespearian description");
         }
 
         [Test]
@@ -140,17 +145,19 @@ namespace TrueLayerAssignment.Tests.Core
             };
             var pokemonSpeciesSummaryProviderMock = new Mock<IPokemonSpeciesSummaryProvider>();
             pokemonSpeciesSummaryProviderMock.Setup(x => x.GetSpecies(It.IsAny<string>())).ReturnsAsync(new PokemonSpeciesSummary(pokemonSpecies));
-            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object);
+            var shakespeareTranslatorMock = new Mock<IShakespeareTranslator>();
+            shakespeareTranslatorMock.Setup(x => x.GetTranslation("Description 2")).ReturnsAsync("Shakespearian description 2");
+            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object, shakespeareTranslatorMock.Object);
 
             // act
             var result = await provider.GetShakesperianDescription("Pikachu", GameVersion.Silver);
 
             // assert
-            result.Should().Be("Description 2");
+            result.Should().Be("Shakespearian description 2");
         }
 
         [Test]
-        public void When_descriptions_for_version_does_not_exist_Should_throw_exception()
+        public void When_descriptions_for_version__does_not_exist_Should_throw_exception()
         {
             // arrange
             var pokemonSpecies = new PokemonSpecies
@@ -174,7 +181,7 @@ namespace TrueLayerAssignment.Tests.Core
             };
             var pokemonSpeciesSummaryProviderMock = new Mock<IPokemonSpeciesSummaryProvider>();
             pokemonSpeciesSummaryProviderMock.Setup(x => x.GetSpecies(It.IsAny<string>())).ReturnsAsync(new PokemonSpeciesSummary(pokemonSpecies));
-            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object);
+            var provider = new PokemonDescriptionProvider(pokemonSpeciesSummaryProviderMock.Object, new Mock<IShakespeareTranslator>().Object);
 
             // act
             Func<Task> func = () => provider.GetShakesperianDescription("Pikachu", GameVersion.Silver);

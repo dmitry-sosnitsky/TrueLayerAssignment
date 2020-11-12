@@ -8,8 +8,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="PokemonSpeciesDescription"/> class
         /// </summary>
-        /// <param name="description"></param>
-        /// <param name="name"></param>
+        /// <param name="description">Description text</param>
+        /// <param name="name">Pokemon name</param>
         public PokemonSpeciesDescription(string description, string name)
         {
             this.Description = description;

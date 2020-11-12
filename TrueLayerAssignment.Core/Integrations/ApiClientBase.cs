@@ -29,6 +29,7 @@ namespace TrueLayerAssignment.Core.Integrations
             }
 
             this.restClient.BaseUrl = uri;
+            this.restClient.UseSerializer<NewtonsoftJsonSerializer>();
         }
 
         protected async Task<TResponse> PerformRequest<TResponse>(IRestRequest request)

@@ -38,6 +38,7 @@ namespace TrueLayerAssignment.Web.Controllers
             {
                 string description = await this.pokemonDescriptionProvider.GetShakesperianDescription(request.Name, request.Version);
                 var response = new GetShakespearianDescriptionResponse(request.Name, description);
+
                 return this.Ok(response);
             }
             catch (Exception e) when (e is PokemonNotFoundException || e is DescriptionForVersionNotFoundException)
